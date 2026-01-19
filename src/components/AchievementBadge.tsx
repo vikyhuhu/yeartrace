@@ -10,12 +10,17 @@ export function AchievementBadge({ status }: AchievementBadgeProps) {
   return (
     <div
       className={`
-        relative rounded-xl p-4 transition-all duration-200
+        relative rounded-[20px] p-4 transition-all duration-200
         ${isUnlocked
           ? 'bg-gradient-to-br from-yellow-50 to-amber-50 border-2 border-yellow-300 shadow-md'
           : 'bg-gray-100 dark:bg-gray-700 border-2 border-transparent'
         }
       `}
+      style={{
+        boxShadow: isUnlocked
+          ? '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)'
+          : 'none'
+      }}
     >
       {/* 图标 */}
       <div

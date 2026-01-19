@@ -97,7 +97,7 @@ export function TaskTemplateSelector({ onSelect, onCustom, onClose }: TaskTempla
                 <button
                   key={template.id}
                   onClick={() => onSelect(template)}
-                  className="group relative bg-gray-50 dark:bg-gray-700 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-xl p-4 text-center transition-all hover:shadow-md border-2 border-transparent hover:border-blue-300"
+                  className="group relative bg-gray-50 dark:bg-gray-700 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-[20px] p-4 text-center transition-all border-2 border-transparent hover:border-blue-300 card-modern"
                 >
                   <div className="text-3xl mb-2">{template.icon}</div>
                   <div className="text-sm font-medium text-gray-900 dark:text-white mb-1">

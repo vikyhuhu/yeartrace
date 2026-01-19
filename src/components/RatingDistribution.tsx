@@ -34,8 +34,8 @@ export function RatingDistribution({ ratingDistribution }: RatingDistributionPro
                 <span>{'⭐️'.repeat(item.rating)}</span>
               </div>
 
-              {/* 进度条 */}
-              <div className="flex-1 h-6 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+              {/* 进度条 - 全圆角 */}
+              <div className="flex-1 h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-amber-400 to-amber-500 dark:from-amber-500 dark:to-amber-600 rounded-full transition-all duration-500"
                   style={{ width: `${barWidth}%` }}

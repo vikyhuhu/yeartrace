@@ -20,7 +20,7 @@ export function TaskStatusTabs({ tasks, selectedStatus, onSelectStatus }: TaskSt
   ]
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl p-2 shadow-md border border-gray-200 dark:border-gray-700">
+    <div className="bg-white rounded-[20px] p-2 border border-gray-200 shadow-sm">
       <div className="flex gap-1">
         {tabs.map(tab => (
           <button
@@ -29,7 +29,7 @@ export function TaskStatusTabs({ tasks, selectedStatus, onSelectStatus }: TaskSt
             className={`flex-1 py-2.5 px-4 rounded-xl font-medium transition-all ${
               selectedStatus === tab.key
                 ? 'bg-blue-500 text-white shadow-md'
-                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+                : 'text-gray-700 hover:bg-gray-100'
             }`}
           >
             <div className="flex items-center justify-center gap-2">
@@ -38,7 +38,7 @@ export function TaskStatusTabs({ tasks, selectedStatus, onSelectStatus }: TaskSt
                 className={`px-2 py-0.5 text-xs rounded-full ${
                   selectedStatus === tab.key
                     ? 'bg-white/20 text-white'
-                    : 'bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-400'
+                    : 'bg-gray-200 text-gray-700'
                 }`}
               >
                 {tab.count}

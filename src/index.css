@@ -26,6 +26,35 @@
   }
 }
 
+/* Checkbox 弹跳效果 - Scale down -> Scale up */
+@keyframes checkbox-bounce {
+  0% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(0.7);
+  }
+  60% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Checkbox 光晕效果 */
+@keyframes checkbox-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
 /* 按钮缩放动画 (300ms) */
 @keyframes button-scale {
   0% {
@@ -113,6 +142,16 @@
   animation: fade-in-out 3s ease-in-out forwards;
 }
 
+/* Checkbox 弹跳动画类 */
+.animate-checkbox-bounce {
+  animation: checkbox-bounce 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Checkbox 光晕动画类 */
+.animate-checkbox-glow {
+  animation: checkbox-glow 600ms ease-out;
+}
+
 /* 弹窗动画 - 移动端从底部滑入 */
 @keyframes slide-in-from-bottom {
   0% {
@@ -168,6 +207,120 @@
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+/* ========================================
+   现代化卡片样式系统
+   ======================================== */
+
+/* 基础卡片样式 - 柔和阴影 + 大圆角 + 细边框 */
+.card-modern {
+  border-radius: 20px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: white;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 卡片悬停效果 - 轻微上浮 + 加深阴影 */
+.card-modern:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+}
+
+/* 小卡片样式 - 16px 圆角 */
+.card-modern-sm {
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: white;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-modern-sm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+}
+
+/* 深色模式卡片样式 */
+.dark .card-modern,
+.dark .card-modern-sm {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgb(31, 41, 55);
+}
+
+.dark .card-modern:hover,
+.dark .card-modern-sm:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+}
+
+/* 无悬停效果的卡片（用于不可交互的展示卡片） */
+.card-modern-static {
+  border-radius: 20px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: white;
+}
+
+.card-modern-static-sm {
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: white;
+}
+
+/* ========================================
+   Tailwind @layer 兼容
+   将这些类添加到 Tailwind 的 utilities 层中
+   ======================================== */
+@layer utilities {
+  .card-hover-lift {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .card-hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+  }
+}
+
+/* ========================================
+   任务列表切换动画 - Fade in + Slide up
+   ======================================== */
+@keyframes task-list-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.task-list-animate {
+  animation: task-list-fade-in 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========================================
+   庆祝动画 - 弹出效果
+   ======================================== */
+@keyframes celebration-pop {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.5) translateY(-20px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.05) translateY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1) translateY(0);
+  }
+}
+
+.animate-celebration-pop {
+  animation: celebration-pop 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 :root {

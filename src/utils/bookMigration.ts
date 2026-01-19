@@ -141,36 +141,3 @@ export function importBooksFromLogs(
   console.log('导入完成，共', importedBooks.length, '本书籍')
   return importedBooks
 }
-
-/**
- * 检测是否有可导入的历史数据
- */
-export function hasImportableReadingLogs(logs: Log[]): boolean {
-  // 查找类型为 check+text 且任务名包含"读书"的任务日志
-  return logs.some(log => log.text && log.text.trim().length > 0)
-}
-
-/**
- * 从任务列表中提取读书任务的日志
- * 支持模糊匹配任务名称（包含"读书"或"阅读"的任务）
- */
-export function extractReadingLogs(allLogs: Log[], allTasks: any[]): Log[] {
-  // 找到读书任务（支持模糊匹配）
-  const readingTask = allTasks.find(task =>
-    (task.name === '读书' || task.name.includes('读书') || task.name.includes('阅读')) &&
-    task.type === 'check+text'
-  )
-
-  if (!readingTask) {
-    console.log('未找到读书任务，任务列表:', allTasks.map(t => ({ name: t.name, type: t.type })))
-    return []
-  }
-
-  console.log('找到读书任务:', readingTask.name, readingTask.id)
-
-  // 返回该任务的所有日志
-  const readingLogs = allLogs.filter(log => log.taskId === readingTask.id)
-  console.log('提取到读书日志:', readingLogs.length, '条')
-
-  return readingLogs
-}

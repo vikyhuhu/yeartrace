@@ -162,4 +162,6 @@ export interface BookStatistics {
   favoriteType: BookType | null
   typeDistribution: Record<BookType, number>
   ratingDistribution: Array<{ rating: number; count: number }>
+  longestStreak: number // 最长连续阅读天数
+  totalPages: number // 总阅读页数
 }

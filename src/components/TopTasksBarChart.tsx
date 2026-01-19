@@ -18,7 +18,7 @@ export function TopTasksBarChart({ year, logs, tasks, filterTaskId }: TopTasksBa
 
   if (topTasks.length === 0) {
     return (
-      <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-6 shadow-lg border border-indigo-200 dark:border-gray-700">
+      <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-[20px] p-6 border border-white/50 dark:border-gray-700 card-modern-static">
         <div className="flex items-center gap-2 mb-4">
           <span className="text-2xl">📊</span>
           <h3 className="font-bold text-gray-800 dark:text-white text-lg">最活跃任务 Top 3</h3>
@@ -29,7 +29,7 @@ export function TopTasksBarChart({ year, logs, tasks, filterTaskId }: TopTasksBa
   }
 
   return (
-    <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-6 shadow-lg border border-indigo-200 dark:border-gray-700">
+    <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-[20px] p-6 border border-white/50 dark:border-gray-700 card-modern-static">
       <div className="flex items-center gap-2 mb-4">
         <span className="text-2xl">📊</span>
         <h3 className="font-bold text-gray-800 dark:text-white text-lg">最活跃任务 Top 3</h3>

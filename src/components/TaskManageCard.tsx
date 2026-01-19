@@ -76,10 +76,10 @@ export function TaskManageCard({
 
   return (
     <div
-      className={`group relative bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-md border-2 transition-all ${
+      className={`group relative bg-white rounded-[20px] p-4 border-2 transition-all shadow-sm ${
         isSelected
           ? 'border-blue-500 ring-2 ring-blue-300'
-          : 'border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600'
+          : 'border-gray-200 hover:border-blue-300'
       }`}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
@@ -106,18 +106,18 @@ export function TaskManageCard({
           📋
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="font-bold text-gray-900 dark:text-white text-base truncate">
+          <h3 className="font-bold text-gray-900 text-base truncate">
             {task.name}
           </h3>
           <div className="flex items-center gap-2 mt-1 flex-wrap">
-            <span className="text-xs text-gray-500 dark:text-gray-400">
+            <span className="text-xs text-gray-600">
               {task.type === 'check' && '完成即记录'}
               {task.type === 'check+text' && '需输入文本'}
               {task.type === 'number' && '数值记录'}
               {task.type === 'violation' && '触犯记录'}
             </span>
             {task.status === 'paused' && (
-              <span className="px-2 py-0.5 text-xs bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 rounded-full">
+              <span className="px-2 py-0.5 text-xs bg-yellow-100 text-yellow-700 rounded-full">
                 已暂停
               </span>
             )}
@@ -129,15 +129,15 @@ export function TaskManageCard({
       <div className="space-y-2 mb-3">
         {/* 已坚持天数 */}
         <div className="flex items-center justify-between text-sm">
-          <span className="text-gray-500 dark:text-gray-400">已坚持</span>
-          <span className="font-semibold text-gray-900 dark:text-white">
+          <span className="text-gray-600">已坚持</span>
+          <span className="font-semibold text-gray-900">
             {persistedDays} 天
           </span>
         </div>
 
         {/* 本周完成情况 */}
         <div className="flex items-center justify-between">
-          <span className="text-xs text-gray-500 dark:text-gray-400">本周</span>
+          <span className="text-xs text-gray-600">本周</span>
           <div className="flex gap-1">
             {weeklyCompletion.map((completed, index) => (
               <div
@@ -145,7 +145,7 @@ export function TaskManageCard({
                 className={`w-2.5 h-2.5 rounded-full ${
                   completed
                     ? 'bg-blue-500'
-                    : 'bg-gray-200 dark:bg-gray-600'
+                    : 'bg-gray-200'
                 }`}
                 title={
                   index === 6
@@ -162,8 +162,8 @@ export function TaskManageCard({
         {/* 最近记录时间 */}
         {lastRecordTime && (
           <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-500 dark:text-gray-400">最近记录</span>
-            <span className="text-gray-700 dark:text-gray-300">
+            <span className="text-gray-600">最近记录</span>
+            <span className="text-gray-800">
               {formatRelativeTime(lastRecordTime)}
             </span>
           </div>
@@ -172,8 +172,8 @@ export function TaskManageCard({
         {/* 数值类任务显示最新数值 */}
         {latestValue !== undefined && (
           <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-500 dark:text-gray-400">当前</span>
-            <span className="font-semibold text-gray-900 dark:text-white">
+            <span className="text-gray-600">当前</span>
+            <span className="font-semibold text-gray-900">
               {latestValue} {task.unit}
             </span>
           </div>
@@ -181,7 +181,7 @@ export function TaskManageCard({
       </div>
 
       {/* 快捷操作按钮 - 移动端始终显示，桌面端悬停显示 */}
-      <div className="flex gap-2 pt-3 border-t border-gray-100 dark:border-gray-700 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+      <div className="flex gap-2 pt-3 border-t border-gray-200 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
         <button
           onClick={(e) => {
             e.stopPropagation()
@@ -209,7 +209,7 @@ export function TaskManageCard({
             e.stopPropagation()
             onEdit(task)
           }}
-          className="px-3 py-2 text-sm font-medium bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg transition-colors"
+          className="px-3 py-2 text-sm font-medium bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition-colors"
         >
           编辑
         </button>
@@ -218,7 +218,7 @@ export function TaskManageCard({
             e.stopPropagation()
             onDelete(task)
           }}
-          className="px-3 py-2 text-sm font-medium bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-900/50 text-red-600 dark:text-red-400 rounded-lg transition-colors"
+          className="px-3 py-2 text-sm font-medium bg-red-100 hover:bg-red-200 text-red-600 rounded-lg transition-colors"
         >
           删除
         </button>
@@ -226,7 +226,7 @@ export function TaskManageCard({
 
       {/* 触摸提示 */}
       <div className="absolute top-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity">
-        <div className="text-[10px] text-gray-400 dark:text-gray-500">
+        <div className="text-[10px] text-gray-500">
           {onSelect ? '长按选择' : '点击卡片或按钮'}
         </div>
       </div>

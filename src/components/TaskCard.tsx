@@ -23,10 +23,9 @@ interface TaskCardProps {
   onLogCreate: (data: Omit<Log, 'id'>) => void
   onLogUpdate: (id: string, data: Partial<Log>) => void
   onLogDelete: (id: string) => void
-  onReadingLogSaved?: () => void // 读书记录保存后的回调（用于自动同步到书单）
 }
 
-export function TaskCard({ task, date, log, allLogs, onLogCreate, onLogUpdate, onLogDelete, onReadingLogSaved }: TaskCardProps) {
+export function TaskCard({ task, date, log, allLogs, onLogCreate, onLogUpdate, onLogDelete }: TaskCardProps) {
   const navigate = useNavigate()
   const cardRef = useRef<HTMLDivElement>(null)
   const buttonRef = useRef<HTMLButtonElement>(null)
@@ -36,6 +35,7 @@ export function TaskCard({ task, date, log, allLogs, onLogCreate, onLogUpdate, o
   const [checked, setChecked] = useState(!!log)
   const [pulse, setPulse] = useState(false)
   const [checkmarkAnim, setCheckmarkAnim] = useState(false)
+  const [checkboxBounceAnim, setCheckboxBounceAnim] = useState(false)
   const [inputValue, setInputValue] = useState('')
   const [selectedBook, setSelectedBook] = useState<string | null>(null)
   const [isCustomInput, setIsCustomInput] = useState(false)
@@ -91,8 +91,10 @@ export function TaskCard({ task, date, log, allLogs, onLogCreate, onLogUpdate, o
     }
     setPulse(true)
     setCheckmarkAnim(true)
+    setCheckboxBounceAnim(true)
     setTimeout(() => setPulse(false), 500)
     setTimeout(() => setCheckmarkAnim(false), 1000)
+    setTimeout(() => setCheckboxBounceAnim(false), 400)
     setShowFeedback(true)
     setTimeout(() => setShowFeedback(false), 1500)
   }
@@ -128,9 +130,6 @@ export function TaskCard({ task, date, log, allLogs, onLogCreate, onLogUpdate, o
       triggerSuccessAnimations()
     }
     setShowBookModal(false)
-
-    // 触发自动同步到书单
-    onReadingLogSaved?.()
   }
 
   // 健身记录弹窗保存处理
@@ -283,6 +282,10 @@ export function TaskCard({ task, date, log, allLogs, onLogCreate, onLogUpdate, o
 
       // 震动反馈（移动端）
       triggerHapticFeedback()
+
+      // Checkbox 弹跳动画
+      setCheckboxBounceAnim(true)
+      setTimeout(() => setCheckboxBounceAnim(false), 400)
 
       // 滑入动画（从待完成变为已完成）
       setSlideInAnim(true)
@@ -738,11 +741,10 @@ export function TaskCard({ task, date, log, allLogs, onLogCreate, onLogUpdate, o
     <div
       ref={cardRef}
       className={`
-        bg-white rounded-xl border transition-all duration-200 overflow-hidden
-        ${pulse ? 'scale-[1.02] shadow-lg ring-2 ring-emerald-400' : 'shadow-sm border-gray-200'}
-        ${isViolation ? 'border-red-200 bg-red-50/50' : ''}
-        ${checked && !isViolation ? 'border-gray-200' : ''}
-        ${!checked ? 'hover:border-gray-300' : ''}
+        bg-white rounded-[20px] border overflow-hidden card-modern
+        ${pulse ? 'scale-[1.02] shadow-lg ring-2 ring-emerald-400' : ''}
+        ${isViolation ? 'border-red-200 bg-red-50/50' : 'border-white/50'}
+        ${checked && !isViolation ? '' : ''}
         ${slideInAnim ? 'animate-slide-in' : ''}
         ${milestoneStyle || ''}
       `}
@@ -764,9 +766,11 @@ export function TaskCard({ task, date, log, allLogs, onLogCreate, onLogUpdate, o
               className={`
                 w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all relative
                 ${checked
-                  ? 'border-emerald-500 bg-emerald-500'
-                  : 'border-gray-300 hover:border-emerald-400'
+                  ? 'border-[#10B981] bg-[#10B981]'
+                  : 'border-gray-300 hover:border-[#10B981]'
                 }
+                ${checkboxBounceAnim ? 'animate-checkbox-bounce' : ''}
+                ${checked ? 'animate-checkbox-glow' : ''}
               `}
             >
               {checked && (
@@ -778,7 +782,7 @@ export function TaskCard({ task, date, log, allLogs, onLogCreate, onLogUpdate, o
           ) : (
             <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
               {checked ? (
-                <div className={`w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center ${checkmarkAnim ? 'animate-[checkmark_0.4s_ease-out]' : ''}`}>
+                <div className={`w-5 h-5 rounded-full bg-[#10B981] flex items-center justify-center ${checkmarkAnim ? 'animate-[checkmark_0.4s_ease-out]' : ''} ${checked ? 'animate-checkbox-glow' : ''}`}>
                   <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                   </svg>
@@ -793,7 +797,10 @@ export function TaskCard({ task, date, log, allLogs, onLogCreate, onLogUpdate, o
           )}
 
           {/* 任务名称 */}
-          <span className="text-sm font-medium text-gray-900 flex-1">
+          <span className={`
+            text-sm font-medium flex-1 transition-all duration-300 ease
+            ${checked ? 'text-gray-400 line-through' : 'text-gray-900'}
+          `}>
             {task.name}
           </span>
 

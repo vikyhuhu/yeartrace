@@ -4,7 +4,7 @@ import { importBooksFromLogs } from '../utils/bookMigration'
 
 const BOOKS_STORAGE_KEY = 'yeartrace_books'
 
-export function useBooks() {
+export function useBooks(allLogs: Log[] = [], allTasks: any[] = []) {
   const [books, setBooks] = useState<Book[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -20,6 +20,33 @@ export function useBooks() {
     }
     setLoading(false)
   }, [])
+
+  // 自动同步：当读书任务的日志更新时，自动同步到书单
+  useEffect(() => {
+    if (loading) return
+
+    // 提取读书任务的日志
+    const readingTask = allTasks.find(task =>
+      (task.name === '读书' || task.name.includes('读书') || task.name.includes('阅读')) &&
+      task.type === 'check+text'
+    )
+
+    if (!readingTask) return
+
+    const readingLogs = allLogs.filter(log => log.taskId === readingTask.id)
+
+    // 如果有读书日志，自动同步（使用函数式更新避免依赖 books）
+    if (readingLogs.length > 0) {
+      setBooks(currentBooks => {
+        const syncedBooks = importBooksFromLogs(readingLogs, currentBooks)
+        // 只有当书籍数量变化时才更新（避免不必要的重渲染）
+        if (syncedBooks.length !== currentBooks.length) {
+          return syncedBooks
+        }
+        return currentBooks
+      })
+    }
+  }, [allLogs, allTasks, loading])
 
   // 保存到 localStorage
   useEffect(() => {
@@ -190,6 +217,36 @@ export function useBooks() {
       console.log(`  ${i}星: ${count}条`, matchingLogs.map(l => ({ book: l.book.name, rating: l.log.rating })))
       ratingDistribution.push({ rating: i, count })
     }
+
+    // 计算总页数
+    const totalPages = yearLogs.reduce((sum, item) => sum + (item.log.pages || 0), 0)
+
+    // 计算最长连续阅读天数
+    const readingDates = Array.from(new Set(yearLogs.map(item => item.log.date))).sort()
+    let longestStreak = 0
+    let currentStreak = 0
+    let prevDate = ''
+
+    readingDates.forEach(date => {
+      if (!prevDate) {
+        currentStreak = 1
+      } else {
+        const prev = new Date(prevDate)
+        const curr = new Date(date)
+        const diffTime = curr.getTime() - prev.getTime()
+        const diffDays = diffTime / (1000 * 60 * 60 * 24)
+
+        if (diffDays === 1) {
+          currentStreak++
+        } else {
+          longestStreak = Math.max(longestStreak, currentStreak)
+          currentStreak = 1
+        }
+      }
+      prevDate = date
+    })
+    longestStreak = Math.max(longestStreak, currentStreak)
+
     console.log('=== getStatistics 完成 ===')
 
     return {
@@ -198,6 +255,8 @@ export function useBooks() {
       favoriteType,
       typeDistribution,
       ratingDistribution,
+      longestStreak,
+      totalPages,
     }
   }
 
@@ -222,28 +281,6 @@ export function useBooks() {
     return calendar
   }
 
-  // 从日志导入书籍数据
-  const importFromLogs = (logs: Log[]) => {
-    console.log('=== importFromLogs 开始 ===')
-    console.log('输入日志数量:', logs.length)
-    console.log('现有书籍数量:', books.length)
-
-    const importedBooks = importBooksFromLogs(logs, books)
-
-    console.log('导入后书籍数量:', importedBooks.length)
-    console.log('所有书籍及其日志:')
-    importedBooks.forEach(book => {
-      console.log(`  书籍: ${book.name}, 类型: ${book.type}, 日志数: ${book.logs.length}`)
-      book.logs.forEach(log => {
-        console.log(`    - 日期: ${log.date}, 评分: ${log.rating}, 备注: ${log.note || '无'}`)
-      })
-    })
-
-    setBooks(importedBooks)
-    console.log('=== importFromLogs 完成 ===')
-    return importedBooks
-  }
-
   return {
     books,
     loading,
@@ -256,6 +293,5 @@ export function useBooks() {
     getBookNames,
     getStatistics,
     getReadingCalendar,
-    importFromLogs,
   }
 }

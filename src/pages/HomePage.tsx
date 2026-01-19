@@ -5,7 +5,6 @@ import { zhCN } from 'date-fns/locale'
 import { useTasks } from '../hooks/useTasks'
 import { useLogs } from '../hooks/useLogs'
 import { useBooks } from '../hooks/useBooks'
-import { extractReadingLogs } from '../utils/bookMigration'
 import { Timeline } from '../components/Timeline'
 import { TaskCard } from '../components/TaskCard'
 import { AllDoneCelebration } from '../components/AllDoneCelebration'
@@ -15,7 +14,8 @@ export function HomePage() {
   const navigate = useNavigate()
   const { tasks, loading: tasksLoading } = useTasks()
   const { logs, createLog, editLog, removeLog } = useLogs()
-  const { importFromLogs: syncBooks } = useBooks()
+  // 自动同步：useBooks 会监听 logs 和 tasks 的变化并自动同步书单
+  useBooks(logs, tasks)
 
   const [selectedDate, setSelectedDate] = useState(getToday())
   // 新增：呼吸动画日期（用于时间轴）
@@ -86,15 +86,6 @@ export function HomePage() {
 
   const handleLogUpdate = (id: string, data: { value?: number; text?: string }) => {
     editLog(id, data)
-  }
-
-  // 读书记录自动同步到书单
-  const handleReadingLogSync = () => {
-    const readingLogs = extractReadingLogs(logs, tasks)
-    if (readingLogs.length > 0) {
-      syncBooks(readingLogs)
-      console.log('自动同步读书记录到书单')
-    }
   }
 
   const handlePrevDay = () => {
@@ -221,7 +212,7 @@ export function HomePage() {
         </div>
 
         {/* 今日任务 */}
-        <div>
+        <div key={selectedDate} className="task-list-animate">
           {/* 未完成任务 - 视觉重心 */}
           {incompleteTasks.length > 0 && (
             <div className="mb-5">
@@ -242,7 +233,6 @@ export function HomePage() {
                       onLogCreate={handleLogCreate}
                       onLogUpdate={handleLogUpdate}
                       onLogDelete={removeLog}
-                      onReadingLogSaved={handleReadingLogSync}
                     />
                   )
                 })}
@@ -270,7 +260,6 @@ export function HomePage() {
                       onLogCreate={handleLogCreate}
                       onLogUpdate={handleLogUpdate}
                       onLogDelete={removeLog}
-                      onReadingLogSaved={handleReadingLogSync}
                     />
                   )
                 })}

@@ -75,7 +75,7 @@ export function YearHeatMap({
   const weekDays = ['一', '二', '三', '四', '五', '六', '日']
 
   return (
-    <div className="bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+    <div className="bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-800 dark:to-gray-900 rounded-[20px] p-6 border border-white/50 dark:border-gray-700 card-modern-static">
       <h3 className="font-bold text-gray-800 dark:text-white mb-4">年度时间轴</h3>
 
       {/* 星期标题 */}

@@ -1,31 +1,20 @@
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useBooks } from '../hooks/useBooks'
-import { useLogs } from '../hooks/useLogs'
-import { useTasks } from '../hooks/useTasks'
-import { extractReadingLogs } from '../utils/bookMigration'
 import { BookStats } from '../components/BookStats'
 import { BookList } from '../components/BookList'
 import { RatingDistribution } from '../components/RatingDistribution'
-import { ReadingHeatmap } from '../components/ReadingHeatmap'
 
 type BookFilter = 'all' | 'manga' | 'novel' | 'other'
 type BookSort = 'date' | 'rating'
 
 export function BooksPage() {
   const navigate = useNavigate()
-  const { books, getStatistics, getReadingCalendar, importFromLogs } = useBooks()
-  const { logs } = useLogs()
-  const { tasks } = useTasks()
+  const { books, getStatistics } = useBooks()
 
   const [selectedFilter, setSelectedFilter] = useState<BookFilter>('all')
   const [selectedSort, setSelectedSort] = useState<BookSort>('date')
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
-  const [importing, setImporting] = useState(false)
-  const [showImportSuccess, setShowImportSuccess] = useState(false)
-
-  const stats = useMemo(() => getStatistics(selectedYear), [getStatistics, selectedYear])
-  const calendarData = useMemo(() => getReadingCalendar(selectedYear), [getReadingCalendar, selectedYear])
 
   // 过滤和排序书籍
   const filteredAndSortedBooks = useMemo(() => {
@@ -69,30 +58,7 @@ export function BooksPage() {
     }
   }
 
-  // 处理导入历史记录
-  const handleImport = () => {
-    setImporting(true)
-    try {
-      const readingLogs = extractReadingLogs(logs, tasks)
-      const imported = importFromLogs(readingLogs)
-      console.log(`Imported ${imported.length} books from ${readingLogs.length} logs`)
-
-      // 显示成功提示
-      setShowImportSuccess(true)
-      setTimeout(() => setShowImportSuccess(false), 3000)
-    } catch (error) {
-      console.error('Import failed:', error)
-    } finally {
-      setImporting(false)
-    }
-  }
-
-  // 检查是否有可导入的数据
-  const hasImportableData = useMemo(() => {
-    const readingLogs = extractReadingLogs(logs, tasks)
-    console.log('检查可导入数据:', { readingLogs: readingLogs.length, books: books.length })
-    return readingLogs.length > 0
-  }, [logs, tasks, books.length])
+  const stats = useMemo(() => getStatistics(selectedYear), [getStatistics, selectedYear])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
@@ -162,9 +128,6 @@ export function BooksPage() {
 
         {/* 顶部统计 */}
         <BookStats stats={stats} />
-
-        {/* 阅读热力图 */}
-        <ReadingHeatmap calendarData={calendarData} year={selectedYear} />
 
         {/* 评分分布 */}
         <RatingDistribution ratingDistribution={stats.ratingDistribution} />
@@ -245,18 +208,6 @@ export function BooksPage() {
 
         {/* 书籍列表 */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-lg border border-gray-200 dark:border-gray-700">
-          {/* 导入成功提示 */}
-          {showImportSuccess && (
-            <div className="mb-4 p-3 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 rounded-lg flex items-center gap-2">
-              <svg className="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              <span className="text-sm text-green-700 dark:text-green-300">
-                成功导入 {books.length} 本书籍
-              </span>
-            </div>
-          )}
-
           <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
             书籍列表 ({filteredAndSortedBooks.length})
           </h2>
@@ -265,54 +216,13 @@ export function BooksPage() {
             <div className="text-center py-12 text-gray-500 dark:text-gray-400">
               <div className="text-4xl mb-3">📚</div>
               <p className="mb-4">暂无书籍记录</p>
-
-              {/* 有可导入数据时显示导入按钮 */}
-              {hasImportableData ? (
-                <div className="space-y-3">
-                  <p className="text-sm">
-                    检测到您在"读书"任务中有历史记录，可以一键导入
-                  </p>
-                  <button
-                    onClick={handleImport}
-                    disabled={importing}
-                    className="px-6 py-2 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors"
-                  >
-                    {importing ? '导入中...' : '📥 导入历史记录'}
-                  </button>
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  <p className="text-sm mt-1">在首页"读书"任务中记录阅读</p>
-                  <p className="text-xs text-gray-400">提示：记录格式如"【小说】书名 ⭐️⭐️"</p>
-                </div>
-              )}
+              <div className="space-y-2">
+                <p className="text-sm mt-1">在首页"读书"任务中记录阅读</p>
+                <p className="text-xs text-gray-400">记录后会自动同步到此页面</p>
+              </div>
             </div>
           ) : (
-            <>
-              {/* 当有可导入数据时，显示更新按钮 */}
-              {hasImportableData && (
-                <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <svg className="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      <span className="text-sm text-blue-700 dark:text-blue-300">
-                        发现新的读书记录可导入
-                      </span>
-                    </div>
-                    <button
-                      onClick={handleImport}
-                      disabled={importing}
-                      className="px-4 py-1.5 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors"
-                    >
-                      {importing ? '导入中...' : '导入'}
-                    </button>
-                  </div>
-                </div>
-              )}
-              <BookList books={filteredAndSortedBooks} />
-            </>
+            <BookList books={filteredAndSortedBooks} />
           )}
         </div>
       </main>

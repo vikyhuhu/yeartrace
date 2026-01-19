@@ -36,7 +36,7 @@ export function BookList({ books }: BookListProps) {
         return (
           <div
             key={book.id}
-            className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden hover:shadow-md transition-shadow"
+            className="bg-white border-white/50 rounded-[20px] overflow-hidden card-modern"
           >
             <button
               onClick={() => setExpandedBookId(isExpanded ? null : book.id)}
@@ -54,7 +54,7 @@ export function BookList({ books }: BookListProps) {
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-gray-900 dark:text-white truncate">
+                    <h3 className="font-bold text-gray-900 dark:text-white truncate">
                       {book.name}
                     </h3>
                     <div className="flex items-center gap-2 mt-1">
@@ -79,7 +79,7 @@ export function BookList({ books }: BookListProps) {
                 </div>
 
                 {latestLog && (
-                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  <div className="text-xs text-gray-400 dark:text-gray-500 mt-1">
                     最近阅读：{format(new Date(latestLog.date), 'yyyy年MM月dd日')}
                   </div>
                 )}

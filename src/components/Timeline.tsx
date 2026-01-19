@@ -62,7 +62,7 @@ export function Timeline({ tasks, logs, days = 30, endDate, onDateClick, selecte
 
   return (
     <div ref={scrollContainerRef} className="w-full overflow-x-auto scrollbar-hide">
-      <div className="flex gap-1 min-w-max">
+      <div className="flex gap-2 min-w-max px-1">
         {allDates.map(date => {
           const dots = getDotsForDate(date)
           const isSelected = date === selectedDate
@@ -75,28 +75,43 @@ export function Timeline({ tasks, logs, days = 30, endDate, onDateClick, selecte
               data-date={date}
               onClick={() => onDateClick?.(date)}
               className={`
-                flex flex-col items-center gap-1 p-1.5 rounded-lg transition-all
-                ${isSelected ? 'bg-gray-100' : 'hover:bg-gray-50'}
+                relative flex flex-col items-center gap-1.5 px-3 py-2 rounded-full transition-all duration-200
+                ${isSelected
+                  ? 'bg-blue-500 shadow-md shadow-blue-500/30'
+                  : 'hover:bg-gray-100'
+                }
               `}
             >
-              <span className={`text-xs font-medium ${
-                isSelected ? 'text-gray-900' : isToday ? 'text-emerald-600' : 'text-gray-400'
+              {/* 日期数字 */}
+              <span className={`text-sm font-semibold transition-colors ${
+                isSelected ? 'text-white' : isToday ? 'text-blue-500' : 'text-gray-500'
               }`}>
                 {dayNum}
               </span>
-              <div className="flex gap-0.5">
+
+              {/* 状态指示点 */}
+              <div className="flex gap-0.5 items-center h-2">
                 {dots.length === 0 ? (
-                  <div className="w-1.5 h-1.5 rounded-full bg-gray-200" />
+                  <div className={`w-1 h-1 rounded-full transition-colors ${
+                    isSelected ? 'bg-white/60' : 'bg-gray-200'
+                  }`} />
                 ) : (
                   dots.slice(0, 3).map((dot, idx) => (
                     <div
                       key={`${dot.date}-${dot.taskId}-${idx}`}
-                      className={`w-1.5 h-1.5 rounded-full ${date === breatheDate && idx === dots.length - 1 ? 'animate-breathe' : ''}`}
-                      style={{ backgroundColor: dot.color }}
+                      className={`w-1 h-1 rounded-full transition-colors ${
+                        date === breatheDate && idx === dots.length - 1 ? 'animate-breathe' : ''
+                      }`}
+                      style={{ backgroundColor: isSelected ? 'white' : dot.color }}
                     />
                   ))
                 )}
               </div>
+
+              {/* 今天指示器 - 优先级低于选中态 */}
+              {isToday && !isSelected && (
+                <div className="absolute -bottom-0.5 w-1 h-1 rounded-full bg-blue-500" />
+              )}
             </button>
           )
         })}

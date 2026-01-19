@@ -71,15 +71,15 @@ export function ReadingHeatmap({ calendarData, year }: ReadingHeatmapProps) {
     return weeksData
   }, [calendarData, year])
 
-  // 根据等级获取颜色样式
+  // 根据等级获取颜色样式 - 清新绿色色阶
   const getColorClass = (level: number) => {
     const colors = [
       'bg-gray-100 dark:bg-gray-700', // 0: 无数据
-      'bg-emerald-200 dark:bg-emerald-900/30', // 1: 少量
-      'bg-emerald-300 dark:bg-emerald-800/40', // 2: 中等
-      'bg-emerald-400 dark:bg-emerald-700/50', // 3: 较多
-      'bg-emerald-500 dark:bg-emerald-600/60', // 4: 很多
-      'bg-emerald-600 dark:bg-emerald-500/70', // 5: 极多
+      'bg-teal-100 dark:bg-teal-900/20', // 1: 少量 - 浅绿
+      'bg-teal-200 dark:bg-teal-800/30', // 2: 中等
+      'bg-teal-300 dark:bg-teal-700/40', // 3: 较多
+      'bg-teal-400 dark:bg-teal-600/50', // 4: 很多
+      'bg-teal-500 dark:bg-teal-500/60', // 5: 极多 - 深绿（避免荧光色）
     ]
     return colors[level] || colors[0]
   }
@@ -104,7 +104,7 @@ export function ReadingHeatmap({ calendarData, year }: ReadingHeatmapProps) {
             {[0, 1, 2, 3, 4, 5].map(level => (
               <div
                 key={level}
-                className={`w-3 h-3 rounded-sm ${getColorClass(level)}`}
+                className={`w-3 h-3 rounded-[2px] ${getColorClass(level)}`}
               />
             ))}
             <span>多</span>
@@ -115,10 +115,10 @@ export function ReadingHeatmap({ calendarData, year }: ReadingHeatmapProps) {
       <div className="overflow-x-auto scrollbar-hide">
         <div className="min-w-max">
           {/* 热力图 */}
-          <div className="flex gap-1">
+          <div className="flex gap-1.5">
             {/* 周数据 */}
             {weeks.map((week, weekIndex) => (
-              <div key={weekIndex} className="flex flex-col gap-1">
+              <div key={weekIndex} className="flex flex-col gap-1.5">
                 {week.map((day, dayIndex) => {
                   if (day.date === '') {
                     return <div key={dayIndex} className="w-3 h-3" />
@@ -130,9 +130,9 @@ export function ReadingHeatmap({ calendarData, year }: ReadingHeatmapProps) {
                   return (
                     <div
                       key={day.date}
-                      className={`w-3 h-3 rounded-sm transition-all duration-200 ${colorClass} ${
+                      className={`w-3 h-3 rounded-[2px] transition-all duration-200 ${colorClass} ${
                         hasData
-                          ? 'cursor-pointer hover:scale-125 hover:shadow-md hover:ring-2 hover:ring-emerald-400'
+                          ? 'cursor-pointer hover:scale-125 hover:shadow-md hover:ring-2 hover:ring-teal-400'
                           : ''
                       }`}
                       title={`${day.date}: ${day.count}次记录${day.pages > 0 ? `，${day.pages}页` : ''}`}
