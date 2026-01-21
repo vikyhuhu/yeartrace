@@ -5,6 +5,7 @@ import { TaskDetailPage } from './pages/TaskDetailPage'
 import { CalendarPage } from './pages/CalendarPage'
 import { YearPage } from './pages/YearPage'
 import { BooksPage } from './pages/BooksPage'
+import { YearTracePage } from './pages/YearTracePage'
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Route path="/calendar" element={<CalendarPage />} />
       <Route path="/year" element={<YearPage />} />
       <Route path="/books" element={<BooksPage />} />
+      <Route path="/yt" element={<YearTracePage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
