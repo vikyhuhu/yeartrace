@@ -57,33 +57,6 @@ export interface DayStats {
   tasks: Task[]
 }
 
-// ========== 成就系统类型 ==========
-
-// 成就条件类型
-export type AchievementCondition =
-  | { type: 'streak'; days: number; taskId?: string; taskName?: string }
-  | { type: 'total'; count: number; taskId?: string; taskName?: string }
-  | { type: 'monthly_perfect'; month: number; year: number }
-
-// 成就定义
-export interface Achievement {
-  id: string
-  name: string
-  description: string
-  icon: string
-  category: 'streak' | 'total' | 'perfect' | 'special'
-  condition: AchievementCondition
-}
-
-// 成就状态
-export interface AchievementStatus {
-  achievement: Achievement
-  isUnlocked: boolean
-  unlockedDate?: string
-  progress?: number
-  progressMax?: number
-}
-
 // ========== 年度统计类型 ==========
 
 // 年度统计

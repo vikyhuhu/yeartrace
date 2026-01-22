@@ -151,7 +151,7 @@ export function TaskDetailPage() {
                 tickLine={false}
               />
               <Tooltip
-                formatter={(value: number) => [`${value}${task.unit || ''}`, task.name]}
+                formatter={(value) => [`${value || 0}${task.unit || ''}`, task.name]}
                 labelFormatter={(value) => format(new Date(value), 'MM月dd日')}
                 contentStyle={{
                   background: 'rgba(255, 255, 255, 0.95)',
