@@ -7,7 +7,6 @@ interface TaskHeatmapProps {
     logs: Log[]
     color?: string
     days?: number
-    taskName?: string
 }
 
 /**
@@ -17,8 +16,7 @@ interface TaskHeatmapProps {
 export function TaskHeatmap({
     logs,
     color = '#10b981',
-    days = 365,
-    taskName = '任务'
+    days = 365
 }: TaskHeatmapProps) {
     const calendarData = useMemo(() => {
         const today = new Date()
@@ -70,9 +68,6 @@ export function TaskHeatmap({
         const rate = ((total / calendarData.length) * 100).toFixed(0)
         return { total, rate }
     }, [calendarData])
-
-    // 周一到周日（只显示一、三、五）
-    const dayLabels = ['一', '三', '五']
 
     return (
         <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">

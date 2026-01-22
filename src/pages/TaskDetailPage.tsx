@@ -257,7 +257,6 @@ export function TaskDetailPage() {
           logs={taskLogs}
           color={task.color}
           days={365}
-          taskName={task.name}
         />
       </div>
     )
