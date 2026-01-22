@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>YearTrace</title>
+  <script type="text/javascript">
+    // GitHub Pages SPA 重定向
+    // 使用 404.html 来支持 SPA 路由
+    (function(l) {
+      if (l.search[1] === '/' ) {
+        var decoded = l.search.slice(1).split('&').map(function(s) {
+          return s.replace(/~and~/g, '&')
+        }).join('?');
+        window.history.replaceState(null, null,
+            l.pathname.slice(0, -1) + decoded + l.hash
+        );
+      }
+    }(window.location))
+  </script>
+</head>
+<body>
+  <script>
+    // 简单的加载指示器
+    document.body.innerHTML = '<div style="font-family: system-ui, sans-serif; text-align: center; padding: 50px;">加载中...</div>';
+  </script>
+</body>
+</html>
